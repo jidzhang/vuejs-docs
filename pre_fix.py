@@ -24,6 +24,7 @@ def fix_file(path):
         patns.append(r'<link .*?manifest.json">')
         patns.append(r"<%- partial\('partials/ad(-text)?'\) %>")
         patns.append(r"<%- partial\('partials/sponsors_sidebar'\) %>")
+        # patns.append(r'\starget="_blank"');
         for pat in patns:
             if (re.search(pat, data) != None):
                 data = re.sub(pat, '', data)
@@ -35,11 +36,13 @@ def fix_file(path):
         patns.append(r'<select class="version-select">.*?</select>')
         for pat in patns:
             if (re.search(pat, data, re.S) != None):
+                print('delete google-analytics')
                 data = re.sub(pat, '', data, flags=re.S)
                 found = True
-        #replace
+        #replace vue.js
         pat = r'<%- url_for\("/js/vue.js"\) %>'
         if (re.search(pat, data) != None):
+            print('replace vue.js with vue.min.js')
             data = re.sub(pat, r'<%- url_for("/js/vue.min.js") %>', data)
             found = True
 
@@ -47,38 +50,6 @@ def fix_file(path):
             f.seek(0)
             f.truncate()
             f.write(data)
-
-def fix_css_url():
-    path = os.path.expanduser('./css')
-    for (dirname, subdir, subfile) in os.walk(path):
-        for f in subfile:
-            subf = os.path.join(dirname, f)
-            if subf.endswith('.css'):
-                with open(subf, 'r+') as f:
-                    data = f.read()
-                    found = False
-                    pat = r'(url\(")/([^/])'
-                    if (re.search(pat, data) != None):
-                        data = re.sub(pat, r'\1../\2', data)
-                        found = True
-                    if found:
-                        f.seek(0)
-                        f.truncate()
-                        f.write(data)
-def fix_service_worker():
-    p = './service-worker.js'
-    with open(p, 'r+') as f:
-        data = f.read()
-        found = False
-        pat = r'"/([^/].*?)"'
-        if (re.search(pat, data) != None):
-            data = re.sub(pat, r'"\1"', data)
-            found = True
-        if found:
-            f.seek(0)
-            f.truncate()
-            f.write(data)
-
 
 
 if __name__ == '__main__':

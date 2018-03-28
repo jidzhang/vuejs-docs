@@ -21,10 +21,10 @@ def repalce_in_file(path, depth):
     with open(path, 'r+') as f:
         data = f.read()
         found = False
-        pat = r'src=".*?/fastclick.min.js"'
-        if (re.search(pat, data) != None):
-            data = re.sub(pat, r'src="https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"', data)
-            found = True
+        # pat = r'src=".*?/fastclick.min.js"'
+        # if (re.search(pat, data) != None):
+        #     data = re.sub(pat, r'src="https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"', data)
+        #     found = True
         pat = r'(href|src)="//'
         if (re.search(pat, data) != None):
             data = re.sub(pat, r'\1="http://', data)
@@ -41,6 +41,10 @@ def repalce_in_file(path, depth):
         if (re.search(pat, data, re.S) != None):
             data = re.sub(pat, '', data, flags=re.S)
             found = True
+        # pat = r'\starget="_blank"'
+        # if (re.search(pat, data) != None):
+        #     data = re.sub(pat, '', data)
+        #     found = True
         pat = r'<script>[^<]*google-analytics\.com[^<]*</script>'
         if (re.search(pat, data, re.S) != None):
             data = re.sub(pat, '', data, flags=re.S)
