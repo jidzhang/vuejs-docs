@@ -5,4 +5,8 @@ Thumbs.db
 .avoscloud/
 .*.un~
 build/
+temp/
+www/
 .vscode/
+vuejs.org/
+*.vuejs.org/

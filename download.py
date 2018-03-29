@@ -20,12 +20,12 @@ def fix_file(path):
     with open(path, 'r+') as f:
         data = f.read()
         found = False
-        pat = r'="(https?:)?//([^"]*\.(js|css))"'
+        pat = r'="(https?:)?//([^"]*\.(js|css|svg))"'
         itr = re.finditer(pat, data)
         for match in itr:
             pre = match.group(1)
             if not pre:
-                pre = 'http:'
+                pre = 'https:'
             url = match.group(2)
             parts = url.split('/')
             n = len(parts)
@@ -36,15 +36,24 @@ def fix_file(path):
             if not os.path.exists(dl_dir):
                 os.makedirs(dl_dir)
             dl_file = dl_dir + filename
+            downloaded = False
             if not os.path.exists(dl_file):
-                print('download: ' + pre + '//' + url)
-                response = urllib2.urlopen(pre + '//' + url)
-                html = response.read()
-                with open(dl_file, 'w+') as df:
-                    df.write(html)
-        if re.search(pat, data) != None:
-            data = re.sub(pat, r'="/dl/\2"', data)
-            found = True
+                try:
+                    print('download from: ' + pre + '//' + url)
+                    print('download to: ' + dl_file)
+                    response = urllib2.urlopen(pre + '//' + url)
+                    html = response.read()
+                    with open(dl_file, 'w+') as df:
+                        df.write(html)
+                        downloaded = True
+                except:
+                    print("download failed: " + pre + '//' + url)
+            else:
+                downloaded = True
+            if downloaded:
+                if re.search(pat, data) != None:
+                    data = re.sub(pat, r'="/dl/\2"', data)
+                    found = True
 
         if found:
             f.seek(0)

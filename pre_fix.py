@@ -24,6 +24,7 @@ def fix_file(path):
         patns.append(r'<link .*?manifest.json">')
         patns.append(r"<%- partial\('partials/ad(-text)?'\) %>")
         patns.append(r"<%- partial\('partials/sponsors_sidebar'\) %>")
+        patns.append(r'<link href=.//fonts.googleapis.com/css.*?>')
         # patns.append(r'\starget="_blank"');
         for pat in patns:
             if (re.search(pat, data) != None):
