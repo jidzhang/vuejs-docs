@@ -21,10 +21,6 @@ def repalce_in_file(path, depth):
     with open(path, 'r+') as f:
         data = f.read()
         found = False
-        # pat = r'src=".*?/fastclick.min.js"'
-        # if (re.search(pat, data) != None):
-        #     data = re.sub(pat, r'src="https://cdn.bootcss.com/fastclick/1.0.6/fastclick.min.js"', data)
-        #     found = True
         pat = r'(href|src)="//'
         if (re.search(pat, data) != None):
             data = re.sub(pat, r'\1="http://', data)
@@ -33,22 +29,23 @@ def repalce_in_file(path, depth):
         if (re.search(pat, data) != None):
             data = re.sub(pat, r'\1="' + dots + r'\2', data)
             found = True
+
+        # append index.html
         pat = r'(href=".+?)/"'
         if (re.search(pat, data) != None):
             data = re.sub(pat, r'\1/index.html"', data)
             found = True
-        pat = r'<div id="ad">.*?</div>'
-        if (re.search(pat, data, re.S) != None):
-            data = re.sub(pat, '', data, flags=re.S)
-            found = True
-        # pat = r'\starget="_blank"'
-        # if (re.search(pat, data) != None):
-        #     data = re.sub(pat, '', data)
-        #     found = True
-        pat = r'<script>[^<]*google-analytics\.com[^<]*</script>'
-        if (re.search(pat, data, re.S) != None):
-            data = re.sub(pat, '', data, flags=re.S)
-            found = True
+
+        # delete multy line
+        del_pats = []
+        del_pats.append(r'<div id="ad">.*?</div>')
+        del_pats.append(r'<script>[^<]*google-analytics\.com[^<]*</script>')
+        del_pats.append(r'<script async>[^<]*service-worker.js[^<]*</script>')
+        for pat in del_pats:
+            if (re.search(pat, data, re.S) != None):
+                data = re.sub(pat, '', data, flags=re.S)
+                found = True
+
         if found:
             f.seek(0)
             f.truncate()
@@ -73,21 +70,24 @@ def fix_css_url():
                         f.write(data)
 def fix_service_worker():
     p = './service-worker.js'
-    with open(p, 'r+') as f:
-        data = f.read()
-        found = False
-        pat = r'"/([^/].*?)"'
-        if (re.search(pat, data) != None):
-            data = re.sub(pat, r'"\1"', data)
-            found = True
-        if found:
-            f.seek(0)
-            f.truncate()
-            f.write(data)
+    try:
+        with open(p, 'r+') as f:
+            data = f.read()
+            found = False
+            pat = r'"/([^/].*?)"'
+            if (re.search(pat, data) != None):
+                data = re.sub(pat, r'"\1"', data)
+                found = True
+            if found:
+                f.seek(0)
+                f.truncate()
+                f.write(data)
+    except:
+        pass
 
 
 
 if __name__ == '__main__':
     replace_by_dir('.', 0)
     fix_css_url()
-    fix_service_worker()
+    # fix_service_worker()

@@ -20,7 +20,7 @@ def fix_file(path):
     with open(path, 'r+') as f:
         data = f.read()
         found = False
-        pat = r'="(https?:)?//([^"]*\.(js|css|svg))"'
+        pat = r'="(https?:)?//([^"<]*\.(js|css|svg))"'
         itr = re.finditer(pat, data)
         for match in itr:
             pre = match.group(1)

@@ -6,9 +6,9 @@ cp ../pre_fix.py .
 cp ../download.py .
 python pre_fix.py
 python download.py
-npm i
+npm install
 npm run build
-cp -R dl/ public/dl
+cp -r dl public
 cp ../fix_dir.py public/
 cd public
 python fix_dir.py

@@ -54,4 +54,7 @@ def fix_file(path):
 
 
 if __name__ == '__main__':
+    """
+    删除无用标签
+    """
     pre_fix('./themes')
